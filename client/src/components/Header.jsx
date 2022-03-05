@@ -20,12 +20,12 @@ export default function Header() {
             <Container className="p-0" fluid>
               <Row>
               <Col xs="1">
-                <Button>
+                <Button className="bg-light bg-opacity-25">
                   <i className="fas fa-arrow-left"></i>
                 </Button>
               </Col>
               <Col md="3" xs="4">
-                <Button className="outline-light">
+                <Button className="bg-light bg-opacity-25">
                  <i className="fas fa-tachometer-alt"/> Boards
                 </Button>
               </Col>
@@ -51,13 +51,13 @@ export default function Header() {
             <h5 className="m-auto text-center text-light">Webix Boards</h5>
           </Col>
           <Col md={{ span: 2, order: 3 }} xs={{ order: 3 }} className="text-center text-md-end">
-            <Button className=" outline-light">
+            <Button className="bg-light bg-opacity-25">
               <i className="fas fa-plus"></i>
             </Button>
-            <Button className="outline-light">
+            <Button className="bg-light bg-opacity-25">
               <i className="far fa-question-circle"></i>
             </Button>
-            <Button className="outline-light">
+            <Button className="bg-light bg-opacity-25">
               <i className="far fa-bell"></i>
             </Button>
           </Col>
