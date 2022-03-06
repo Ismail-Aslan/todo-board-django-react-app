@@ -56,7 +56,7 @@ function Column(props) {
               {(provided) => (
                 <Container
                 className="d-flex flex-column border border-white overflow-auto"
-                style={{"maxHeight":"60vh"}}
+                style={{"maxHeight":"55vh"}}
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   fluid
