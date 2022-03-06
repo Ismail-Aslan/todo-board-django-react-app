@@ -6,15 +6,31 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import BoardHeader from "../components/BoardHeader";
 export default function Board(props) {
-  const initialData = { tasks: {}, columns: {}, columnOrder: [] };
+  const initialData = {
+    tasks: {
+      "task-1": {
+        id: "task-1",
+        content: "deneme",
+        assignedTo: "ali veli",
+        tags: ["asd", "asdf"],
+        color:"primary"
+      },
+    },
+    columns: {
+      "column-1":{
+        id:"column-1",
+        title:"Backlog",
+        taskIds:["task-1"]
+      }
+    },
+    columnOrder: ["column-1"],
+  };
   const [state, setState] = useState(initialData);
-  console.log(state);
   //   useEffect(() => {
   //     fetchBoard().then(board => setState(board));
   // }, [props.token]);
-
+console.log(state);
   useEffect(() => {
-    console.log(state);
     if (state !== initialData) {
       saveBoard();
     }
@@ -113,7 +129,7 @@ export default function Board(props) {
   return (
     <Container
       className="bg-primary bg-opacity-75"
-      style={{ height:"min-content" }}
+      style={{ height: "min-content" }}
       fluid
     >
       <BoardHeader />
@@ -128,7 +144,7 @@ export default function Board(props) {
           {(provided) => (
             <div
               className="d-flex flex-nowrap overflow-auto pb-3"
-              style={{"height":"80vh"}}
+              style={{ height: "80vh" }}
               {...provided.droppableProps}
               ref={provided.innerRef}
             >

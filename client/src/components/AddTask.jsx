@@ -30,6 +30,7 @@ export default function AddTask(props) {
     const newTask = {
         id: newTaskId,
         content: content,
+        color:"primary"
     }
 
     props.setState({...props.state,

@@ -8,7 +8,6 @@ import {
 } from "react-bootstrap";
 
 export default function AddColumn(props) {
-  console.log(props);
   const [value, setValue] = useState("");
   function handleInputChange(event) {
     setValue(event.target.value);
