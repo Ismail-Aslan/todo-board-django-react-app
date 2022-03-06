@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     
     # third party apps
     'rest_framework',
-    
+    'psycopg2',
     
     # my apps
     'todo_api',
