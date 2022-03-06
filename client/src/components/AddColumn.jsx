@@ -8,6 +8,7 @@ import {
 } from "react-bootstrap";
 
 export default function AddColumn(props) {
+  console.log(props);
   const [value, setValue] = useState("");
   function handleInputChange(event) {
     setValue(event.target.value);
@@ -39,7 +40,7 @@ export default function AddColumn(props) {
     });
   }
   return (
-    <Form className="d-flex border rounded my-2">
+    <Form className="d-flex border rounded my-2 w-25 w-sm-100">
       <InputGroup className="border-0">
         <FormControl
           onChange={handleInputChange}
