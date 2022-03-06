@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios"
 import { Container } from "react-bootstrap";
 import Column from "../components/Column";
 import AddColumn from "../components/AddColumn";
@@ -26,17 +27,19 @@ export default function Board(props) {
     columnOrder: ["column-1"],
   };
   const [state, setState] = useState(initialData);
-  //   useEffect(() => {
-  //     fetchBoard().then(board => setState(board));
+    useEffect(async() => {
+      const data = await getBoardData()
+      setState(data)
   // }, [props.token]);
+  }, []);
   useEffect(() => {
     if (state !== initialData) {
       saveBoard();
     }
   }, [state]);
   async function saveBoard() {
-    const response = await fetch("/board", {
-      method: "POST",
+    const response = await fetch("http://127.0.0.1:8000/board", {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + props.token,
@@ -46,10 +49,17 @@ export default function Board(props) {
     const data = await response.json();
   }
 
-  async function fetchBoard() {
-    // const response = await fetch('/board', {headers: {"Authorization" : "Bearer " + props.token}});
-    // const data = await response.json();
-    // return data.board;
+  async function getBoardData() {
+    const tasksRes = await axios.get('http://127.0.0.1:8000/api/tasks')
+    const columnsRes = await axios.get('http://127.0.0.1:8000/api/columns')
+    const boardsRes = await axios.get('http://127.0.0.1:8000/api/board')
+    const tasks = {}
+    const columns = {}
+    tasksRes.data.map(el=>tasks[el.id]=el)
+    columnsRes.data.map(el=>columns[el.id]=el)
+    const data = {tasks,columns,columnOrder:boardsRes.data[0].columnOrder}
+
+    return data;
   }
 
   function onDragEnd(result) {
