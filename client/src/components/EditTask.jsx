@@ -57,7 +57,7 @@ export default function EditTask({
     const oldTaskIds = state.columns[columnId].taskIds.filter(
       (el) => el !== task.id
     );
-    console.log(oldTaskIds);
+
     const oldColumn = { ...state.columns[columnId], taskIds: oldTaskIds };
 
     const newTaskIds = state.columns[columnId].taskIds.includes(task.id)?state.columns[columnId].taskIds: [...state.columns[columnId].taskIds,task.id]
@@ -72,20 +72,7 @@ export default function EditTask({
     const newColumnOrder = state.columnOrder.includes("column-0")
     ? state.columnOrder
     : [...state.columnOrder,"column-0"];
-    console.log({
-        ...state,
-        tasks: {
-          ...state.tasks,
-          [task.id]: newTask,
-        },
   
-        columns: {
-          ...state.columns,
-          [columnId]: oldColumn,
-          ["column-0"]: newColumn,
-        },
-        columnOrder: newColumnOrder
-      });
     setState({
       ...state,
       tasks: {

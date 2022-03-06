@@ -29,7 +29,6 @@ export default function Board(props) {
   //   useEffect(() => {
   //     fetchBoard().then(board => setState(board));
   // }, [props.token]);
-console.log(state);
   useEffect(() => {
     if (state !== initialData) {
       saveBoard();
