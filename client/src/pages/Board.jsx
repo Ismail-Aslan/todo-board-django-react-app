@@ -13,15 +13,15 @@ export default function Board(props) {
         content: "deneme",
         assignedTo: "ali veli",
         tags: ["asd", "asdf"],
-        color:"secondary"
+        color: "secondary",
       },
     },
     columns: {
-      "column-1":{
-        id:"column-1",
-        title:"Backlog",
-        taskIds:["task-1"]
-      }
+      "column-1": {
+        id: "column-1",
+        title: "Backlog",
+        taskIds: ["task-1"],
+      },
     },
     columnOrder: ["column-1"],
   };
@@ -34,7 +34,6 @@ export default function Board(props) {
       saveBoard();
     }
   }, [state]);
-console.log(state);
   async function saveBoard() {
     const response = await fetch("/board", {
       method: "POST",
