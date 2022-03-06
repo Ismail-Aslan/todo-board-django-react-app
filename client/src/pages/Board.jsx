@@ -13,7 +13,7 @@ export default function Board(props) {
         content: "deneme",
         assignedTo: "ali veli",
         tags: ["asd", "asdf"],
-        color:"primary"
+        color:"secondary"
       },
     },
     columns: {
@@ -34,7 +34,7 @@ export default function Board(props) {
       saveBoard();
     }
   }, [state]);
-
+console.log(state);
   async function saveBoard() {
     const response = await fetch("/board", {
       method: "POST",

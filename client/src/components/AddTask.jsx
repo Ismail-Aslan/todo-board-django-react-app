@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
- 
-    Button,
-    Form,
-    FormControl,
-    InputGroup,
-  } from "react-bootstrap";
+import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 
 export default function AddTask(props) {
   const [value, setValue] = useState("");
@@ -13,7 +7,6 @@ export default function AddTask(props) {
     setValue(event.target.value);
   }
   function handleClick() {
-    console.log(value);
     if (value !== "") {
       addNewTask(props.columnId, value);
       setValue("");
@@ -21,32 +14,37 @@ export default function AddTask(props) {
   }
 
   function addNewTask(columnId, content) {
-    const newTaskId = 'task-' + Math.floor(Math.random() * 100000);
-
+    const newTaskId = "task-" + Math.floor(Math.random() * 100000);
+    if (Object.keys(props.state.tasks).includes(newTaskId)) {
+      addNewTask(columnId, content);
+      return;
+    }
     const column = props.state.columns[columnId];
     const newTaskIds = Array.from(column.taskIds);
+
     newTaskIds.push(newTaskId);
 
     const newTask = {
-        id: newTaskId,
-        content: content,
-        color:"primary"
-    }
+      id: newTaskId,
+      content: content,
+      color: "primary",
+    };
 
-    props.setState({...props.state,
-        tasks: {
-            ...props.state.tasks,
-            [newTaskId]: newTask
+    props.setState({
+      ...props.state,
+      tasks: {
+        ...props.state.tasks,
+        [newTaskId]: newTask,
+      },
+      columns: {
+        ...props.state.columns,
+        [columnId]: {
+          ...props.state.columns[columnId],
+          taskIds: newTaskIds,
         },
-        columns: {
-            ...props.state.columns,
-            [columnId]: {
-                ...props.state.columns[columnId],
-                taskIds: newTaskIds
-            }
-        }
+      },
     });
-}
+  }
   return (
     <Form className="d-flex border rounded my-2">
       <InputGroup className="border-0">

@@ -1,5 +1,12 @@
-import React, { useRef, useState } from "react";
-import { Button, Form, FormControl, InputGroup, Modal } from "react-bootstrap";
+import React, { useRef } from "react";
+import {
+  Button,
+  Form,
+  FormControl,
+  Row,
+  Col,
+  Modal,
+} from "react-bootstrap";
 
 export default function EditTask({
   show,
@@ -9,11 +16,13 @@ export default function EditTask({
   setState,
   columnId,
 }) {
+
   const contentRef = useRef();
   const assignRef = useRef();
   const tagRef = useRef();
   const dateRef = useRef();
   const colorRef = useRef();
+  
   function handleClick() {
     editTask(
       task.id,
@@ -26,7 +35,6 @@ export default function EditTask({
   }
 
   function editTask(id, content, assignedTo, tags, dueDate, color) {
-    console.log(state);
     const newTask = {
       id,
       content,
@@ -60,19 +68,19 @@ export default function EditTask({
 
     const oldColumn = { ...state.columns[columnId], taskIds: oldTaskIds };
 
-    const newTaskIds = state.columns[columnId].taskIds.includes(task.id)?state.columns[columnId].taskIds: [...state.columns[columnId].taskIds,task.id]
-    let newColumn
+    const newTaskIds = state.columns[columnId].taskIds.includes(task.id)
+      ? state.columns[columnId].taskIds
+      : [...state.columns[columnId].taskIds, task.id];
+    let newColumn;
     if (!!state.columns["column-0"]) {
-        
-        newColumn = {  ...state.columns["column-0"], taskIds: newTaskIds };
+      newColumn = { ...state.columns["column-0"], taskIds: newTaskIds };
     } else {
-        newColumn = {  id:"column-0",title:"Done", taskIds: [task.id] };
-        
+      newColumn = { id: "column-0", title: "Done", taskIds: [task.id] };
     }
     const newColumnOrder = state.columnOrder.includes("column-0")
-    ? state.columnOrder
-    : [...state.columnOrder,"column-0"];
-  
+      ? state.columnOrder
+      : [...state.columnOrder, "column-0"];
+
     setState({
       ...state,
       tasks: {
@@ -88,33 +96,7 @@ export default function EditTask({
       columnOrder: newColumnOrder,
     });
   }
-  //   function addNewTask(columnId, content) {
-  //     const newTaskId = 'task-' + Math.floor(Math.random() * 100000);
 
-  //     const column = props.state.columns[columnId];
-  //     const newTaskIds = Array.from(column.taskIds);
-  //     newTaskIds.push(newTaskId);
-
-  //     const newTask = {
-  //         id: newTaskId,
-  //         content: content,
-  //         color:"primary"
-  //     }
-
-  //     props.setState({...props.state,
-  //         tasks: {
-  //             ...props.state.tasks,
-  //             [newTaskId]: newTask
-  //         },
-  //         columns: {
-  //             ...props.state.columns,
-  //             [columnId]: {
-  //                 ...props.state.columns[columnId],
-  //                 taskIds: newTaskIds
-  //             }
-  //         }
-  //     });
-  // }
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -122,60 +104,85 @@ export default function EditTask({
       </Modal.Header>
       <Form>
         <Modal.Body>
-          <FormControl
-            id="content"
-            ref={contentRef}
-            defaultValue={task.content}
-            type="text"
-            placeholder="Add content..."
-            aria-label="content"
-          />
-          <FormControl
-            id="assignedTo"
-            ref={assignRef}
-            defaultValue={task.assignedTo}
-            type="text"
-            placeholder="Assign to..."
-            aria-label="assignedTo"
-          />
-          <FormControl
-            id="tags"
-            ref={tagRef}
-            defaultValue={task.tags}
-            type="text"
-            placeholder="Add tags..."
-            aria-label="tags"
-          />
-          <FormControl
-            id="dueDate"
-            ref={dateRef}
-            defaultValue={task.dueDate}
-            type="date"
-            placeholder="Add due date..."
-            aria-label="dueDate"
-          />
+          <Row>
+            <Form.Group as={Col}>
+              <Form.Label>Content:</Form.Label>
+              <Form.Control
+                id="content"
+                ref={contentRef}
+                defaultValue={task.content}
+                type="text"
+                placeholder="Add content..."
+                aria-label="content"
+              />
+            </Form.Group>
+          </Row>
+          <Row>
+            <Form.Group as={Col}>
+              <Form.Label>Assined To:</Form.Label>
+              <FormControl
+                id="assignedTo"
+                ref={assignRef}
+                defaultValue={task.assignedTo}
+                type="text"
+                placeholder="Assign to..."
+                aria-label="assignedTo"
+              />
+            </Form.Group>
 
-          <Form.Select
-            aria-label="color"
-            id="color"
-            ref={colorRef}
-            defaultValue={task.color}
-            // className="bg-primary"
-            className={"bg-" + task.color}
-          >
-            <option value="primary" className="bg-primary m-4 border rounded">
-              Normal{" "}
-            </option>
-            <option value="warning" className="bg-warning m-1 border rounded">
-              Low
-            </option>
-            <option value="danger" className="bg-danger m-1 border rounded">
-              Urgent
-            </option>
-          </Form.Select>
+            <Form.Group as={Col}>
+              <Form.Label>Tags:</Form.Label>
+              <FormControl
+                id="tags"
+                ref={tagRef}
+                defaultValue={task.tags}
+                type="text"
+                placeholder="Add tags..."
+                aria-label="tags"
+              />
+            </Form.Group>
+          </Row>
+          <Row>
+            <Form.Group as={Col}>
+              <Form.Label>Due Date:</Form.Label>
+              <FormControl
+                id="dueDate"
+                ref={dateRef}
+                defaultValue={task.dueDate}
+                type="date"
+                aria-label="dueDate"
+              />
+            </Form.Group>
+            <Form.Group as={Col}>
+              <Form.Label>Priority:</Form.Label>
+              <Form.Select
+                aria-label="color"
+                id="color"
+                ref={colorRef}
+                defaultValue={task.color}
+                className={"bg-" + task.color}
+              >
+                <option
+                  value="secondary"
+                  className="bg-secondary m-4 border rounded"
+                >
+                  Normal
+                </option>
+                <option
+                  value="warning"
+                  className="bg-warning m-1 border rounded"
+                >
+                  Low
+                </option>
+                <option value="danger" className="bg-danger m-1 border rounded">
+                  Urgent
+                </option>
+              </Form.Select>
+            </Form.Group>
+          </Row>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleMark}>
+          <Button variant="success" onClick={handleMark}>
             Mark As Done
           </Button>
           <Button variant="primary" onClick={handleClick}>

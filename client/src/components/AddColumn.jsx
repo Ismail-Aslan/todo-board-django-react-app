@@ -1,11 +1,5 @@
 import React, { useState, useRef } from "react";
-import {
- 
-  Button,
-  Form,
-  FormControl,
-  InputGroup,
-} from "react-bootstrap";
+import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 
 export default function AddColumn(props) {
   const [value, setValue] = useState("");
@@ -13,16 +7,21 @@ export default function AddColumn(props) {
     setValue(event.target.value);
   }
   function handleClick() {
-    console.log(value);
     if (value !== "") {
-        addNewColumn(value)
+      addNewColumn(value);
       setValue("");
     }
   }
 
   function addNewColumn(title) {
     const newColumnOrder = Array.from(props.state.columnOrder);
-    const newColumnId = "column-" + Math.floor(Math.random() * 100000);
+    const newColumnId = "column-" + (Math.floor(Math.random() * 100000) + 1);
+
+    if (Object.keys(props.state.columns).includes(newColumnId)) {
+      addNewColumn(title);
+      return;
+    }
+
     newColumnOrder.push(newColumnId);
     const newColumn = {
       id: newColumnId,
