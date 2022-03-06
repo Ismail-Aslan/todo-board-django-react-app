@@ -7,22 +7,20 @@ class Task(models.Model):
     tags = ArrayField( models.TextField(null=True,blank=True))
     assignedTo = models.TextField(null=True,blank=True)
     color = models.TextField(null=True,blank=True)
-    column=models.ForeignKey(
-        'Column',
-        on_delete=models.CASCADE,
-    )
+   
     def __str__(self):
         return f"{self.id} {self.content}"
 
 class Column(models.Model):
     id = models.TextField(blank=True,primary_key=True)
     title = models.TextField(null=True,blank=True)
+    taskIds = ArrayField( models.TextField(null=True,blank=True))
     
     def __str__(self):
         return f"{self.id} {self.title}"
     
 class Board(models.Model):
-    order= ArrayField( models.TextField(null=True,blank=True))
+    columnOrder= ArrayField( models.TextField(null=True,blank=True))
     
     def __str__(self):
         return f"{self.order}"
