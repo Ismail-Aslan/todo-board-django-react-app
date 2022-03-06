@@ -53,8 +53,8 @@ function Column(props) {
             <Droppable droppableId={props.column.id} type="task" >
               {(provided) => (
                 <Container
+                className="d-flex flex-column border border-white overflow-auto"
                 style={{"maxHeight":"60vh"}}
-                className=" d-flex flex-column border border-white overflow-auto"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   fluid
