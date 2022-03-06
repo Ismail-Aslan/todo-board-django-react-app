@@ -34,11 +34,13 @@ function Column(props) {
   return (
     <Draggable draggableId={props.column.id} index={props.index}>
       {(provided) => (
-        <Card
+       <div 
+       style={{"height":"min-content", "minWidth":"280px"}}
+       >
+          <Card
           {...provided.draggableProps}
           ref={provided.innerRef}
           className="mx-2"
-          style={{"height":"min-content", "minWidth":"280px"}}
         >
           <Card.Header
             {...provided.dragHandleProps}
@@ -82,6 +84,7 @@ function Column(props) {
             />
           </Card.Footer>
         </Card>
+       </div>
       )}
     </Draggable>
   );
