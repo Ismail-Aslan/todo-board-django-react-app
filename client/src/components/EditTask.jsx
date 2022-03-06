@@ -19,34 +19,26 @@ export default function EditTask({
   const colorRef = useRef();
 
   function handleClick() {
-    editTask(
-      task.id,
-      contentRef.current.value,
-      assignRef.current.value,
-      tagRef.current.value.length > 0 ? tagRef.current.value.split(",") : [],
-      dateRef.current.value,
-      colorRef.current.value
-    );
-  }
-
-  function editTask(id, content, assignedTo, tags, dueDate, color) {
     const newTask = {
-      id,
-      content,
-      assignedTo,
-      tags: tags,
-      dueDate,
-      color,
+      id: task.id,
+      content: contentRef.current.value,
+      assignedTo: assignRef.current.value,
+      tags:
+        tagRef.current.value.length > 0 ? tagRef.current.value.split(",") : [],
+      dueDate: dateRef.current.value,
+      color: colorRef.current.value,
     };
 
     setState({
       ...state,
       tasks: {
         ...state.tasks,
-        [id]: newTask,
+        [task.id]: newTask,
       },
     });
+    handleClose()
   }
+
   function handleMark() {
     const newTask = {
       id: task.id,
