@@ -1,13 +1,14 @@
-import React from "react";
+import React,{useState} from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { Container, Card } from "react-bootstrap";
 import Task from "./Task";
 import AddTask from "./AddTask";
-
+import DeleteModal from "./DeleteModal";
 function Column(props) {
-  
-  function deleteColumn(columnId, index) {
-    const columnTasks = props.state.columns[columnId].taskIds;
+  const [showModal, setShowModal] = useState(false);
+  console.log(props);
+  function deleteColumn() {
+    const columnTasks = props.state.columns[props.column.id].taskIds;
 
     const finalTasks = columnTasks.reduce((previousValue, currentValue) => {
       const { [currentValue]: oldTask, ...newTasks } = previousValue;
@@ -15,10 +16,10 @@ function Column(props) {
     }, props.state.tasks);
 
     const columns = props.state.columns;
-    const { [columnId]: oldColumn, ...newColumns } = columns;
+    const { [props.column.id]: oldColumn, ...newColumns } = columns;
 
     const newColumnOrder = Array.from(props.state.columnOrder);
-    newColumnOrder.splice(index, 1);
+    newColumnOrder.splice(props.index, 1);
 
     props.setState({
       tasks: {
@@ -31,7 +32,13 @@ function Column(props) {
     });
   }
 
-  return (
+  return (<>
+  <DeleteModal
+        show={showModal}
+        setShow={setShowModal}
+        handleDelete={deleteColumn}
+        type="column"
+      />
     <Draggable draggableId={props.column.id} index={props.index}>
       {(provided) => (
        <div 
@@ -47,7 +54,7 @@ function Column(props) {
             className="d-flex justify-content-between"
           >
             <span>{props.column.title}</span>
-            <span onClick={() => deleteColumn(props.column.id, props.index)}>
+            <span onClick={() => setShowModal(true)}>
               X
             </span>
           </Card.Header>
@@ -86,7 +93,7 @@ function Column(props) {
         </Card>
        </div>
       )}
-    </Draggable>
+    </Draggable></>
   );
 }
 

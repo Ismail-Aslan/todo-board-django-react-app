@@ -1,41 +1,13 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import {
-  Tooltip,
-  Card,
-  OverlayTrigger,
-  Button,
-  Col,
-  Row,
-} from "react-bootstrap";
+import { Tooltip, Card, OverlayTrigger, Button } from "react-bootstrap";
 import EditTask from "./EditTask";
+
 function Task(props) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  function deleteTask(columnId, index, taskId) {
-    const column = props.state.columns[columnId];
-    const newTaskIds = Array.from(column.taskIds);
-    newTaskIds.splice(index, 1);
-
-    const tasks = props.state.tasks;
-    const { [taskId]: oldTask, ...newTasks } = tasks;
-
-    props.setState({
-      ...props.state,
-      tasks: {
-        ...newTasks,
-      },
-      columns: {
-        ...props.state.columns,
-        [columnId]: {
-          ...column,
-          taskIds: newTaskIds,
-        },
-      },
-    });
-  }
 
   return (
     <>
@@ -46,6 +18,7 @@ function Task(props) {
         state={props.state}
         setState={props.setState}
         columnId={props.columnId}
+        index={props.index}
       />
       <Draggable draggableId={props.task.id} index={props.index}>
         {(provided) => (
@@ -55,7 +28,11 @@ function Task(props) {
             ref={provided.innerRef}
             className="my-2 shadow"
           >
-            <div className={"border-start border-3 rounded border-"+ props.task.color }>
+            <div
+              className={
+                "border-start border-3 rounded border-" + props.task.color
+              }
+            >
               <Card.Header className="d-flex justify-content-between p-1 align-items-center">
                 {props.task.content}
 

@@ -1,13 +1,6 @@
-import React, { useRef } from "react";
-import {
-  Button,
-  Form,
-  FormControl,
-  Row,
-  Col,
-  Modal,
-} from "react-bootstrap";
-
+import React, { useRef, useState } from "react";
+import { Button, Form, FormControl, Row, Col, Modal } from "react-bootstrap";
+import DeleteModal from "./DeleteModal";
 export default function EditTask({
   show,
   handleClose,
@@ -15,14 +8,16 @@ export default function EditTask({
   state,
   setState,
   columnId,
+  index,
 }) {
+  const [showModal, setShowModal] = useState(false);
 
   const contentRef = useRef();
   const assignRef = useRef();
   const tagRef = useRef();
   const dateRef = useRef();
   const colorRef = useRef();
-  
+
   function handleClick() {
     editTask(
       task.id,
@@ -96,100 +91,136 @@ export default function EditTask({
       columnOrder: newColumnOrder,
     });
   }
+  function deleteTask() {
+    const column = state.columns[columnId];
+    const newTaskIds = Array.from(column.taskIds);
+    newTaskIds.splice(index, 1);
+
+    const tasks = state.tasks;
+    const { [task.id]: oldTask, ...newTasks } = tasks;
+
+    setState({
+      ...state,
+      tasks: {
+        ...newTasks,
+      },
+      columns: {
+        ...state.columns,
+        [columnId]: {
+          ...column,
+          taskIds: newTaskIds,
+        },
+      },
+    });
+  }
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Edit Task</Modal.Title>
-      </Modal.Header>
-      <Form>
-        <Modal.Body>
-          <Row>
-            <Form.Group as={Col}>
-              <Form.Label>Content:</Form.Label>
-              <Form.Control
-                id="content"
-                ref={contentRef}
-                defaultValue={task.content}
-                type="text"
-                placeholder="Add content..."
-                aria-label="content"
-              />
-            </Form.Group>
-          </Row>
-          <Row>
-            <Form.Group as={Col}>
-              <Form.Label>Assined To:</Form.Label>
-              <FormControl
-                id="assignedTo"
-                ref={assignRef}
-                defaultValue={task.assignedTo}
-                type="text"
-                placeholder="Assign to..."
-                aria-label="assignedTo"
-              />
-            </Form.Group>
+    <>
+      <DeleteModal
+        show={showModal}
+        setShow={setShowModal}
+        handleDelete={deleteTask}
+        type="task"
+      />
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Task</Modal.Title>
+        </Modal.Header>
+        <Form>
+          <Modal.Body>
+            <Row>
+              <Form.Group as={Col}>
+                <Form.Label>Content:</Form.Label>
+                <Form.Control
+                  id="content"
+                  ref={contentRef}
+                  defaultValue={task.content}
+                  type="text"
+                  placeholder="Add content..."
+                  aria-label="content"
+                />
+              </Form.Group>
+            </Row>
+            <Row>
+              <Form.Group as={Col}>
+                <Form.Label>Assined To:</Form.Label>
+                <FormControl
+                  id="assignedTo"
+                  ref={assignRef}
+                  defaultValue={task.assignedTo}
+                  type="text"
+                  placeholder="Assign to..."
+                  aria-label="assignedTo"
+                />
+              </Form.Group>
 
-            <Form.Group as={Col}>
-              <Form.Label>Tags:</Form.Label>
-              <FormControl
-                id="tags"
-                ref={tagRef}
-                defaultValue={task.tags}
-                type="text"
-                placeholder="Add tags..."
-                aria-label="tags"
-              />
-            </Form.Group>
-          </Row>
-          <Row>
-            <Form.Group as={Col}>
-              <Form.Label>Due Date:</Form.Label>
-              <FormControl
-                id="dueDate"
-                ref={dateRef}
-                defaultValue={task.dueDate}
-                type="date"
-                aria-label="dueDate"
-              />
-            </Form.Group>
-            <Form.Group as={Col}>
-              <Form.Label>Priority:</Form.Label>
-              <Form.Select
-                aria-label="color"
-                id="color"
-                ref={colorRef}
-                defaultValue={task.color}
-                className={"bg-" + task.color}
-              >
-                <option
-                  value="secondary"
-                  className="bg-secondary m-4 border rounded"
+              <Form.Group as={Col}>
+                <Form.Label>Tags:</Form.Label>
+                <FormControl
+                  id="tags"
+                  ref={tagRef}
+                  defaultValue={task.tags}
+                  type="text"
+                  placeholder="Add tags..."
+                  aria-label="tags"
+                />
+              </Form.Group>
+            </Row>
+            <Row>
+              <Form.Group as={Col}>
+                <Form.Label>Due Date:</Form.Label>
+                <FormControl
+                  id="dueDate"
+                  ref={dateRef}
+                  defaultValue={task.dueDate}
+                  type="date"
+                  aria-label="dueDate"
+                />
+              </Form.Group>
+              <Form.Group as={Col}>
+                <Form.Label>Priority:</Form.Label>
+                <Form.Select
+                  aria-label="color"
+                  id="color"
+                  ref={colorRef}
+                  defaultValue={task.color}
+                  className={"bg-" + task.color}
                 >
-                  Normal
-                </option>
-                <option
-                  value="warning"
-                  className="bg-warning m-1 border rounded"
-                >
-                  Low
-                </option>
-                <option value="danger" className="bg-danger m-1 border rounded">
-                  Urgent
-                </option>
-              </Form.Select>
-            </Form.Group>
-          </Row>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="success" onClick={handleMark}>
-            Mark As Done
-          </Button>
-          <Button variant="primary" onClick={handleClick}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Form>
-    </Modal>
+                  <option
+                    value="secondary"
+                    className="bg-secondary m-4 border rounded"
+                  >
+                    Normal
+                  </option>
+                  <option
+                    value="warning"
+                    className="bg-warning m-1 border rounded"
+                  >
+                    Low
+                  </option>
+                  <option
+                    value="danger"
+                    className="bg-danger m-1 border rounded"
+                  >
+                    Urgent
+                  </option>
+                </Form.Select>
+              </Form.Group>
+            </Row>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={() => setShowModal(true)}>
+              Delete
+            </Button>
+            <Button variant="success" onClick={handleMark}>
+              Mark As Done
+            </Button>
+            <Button variant="primary" onClick={handleClick}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+    </>
   );
 }
