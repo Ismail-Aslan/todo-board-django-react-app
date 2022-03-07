@@ -39,17 +39,17 @@ export default function Board(props) {
     }
   }, [state]);
   async function saveBoard() {
-    await axios.post("http://127.0.0.1:8000/api/tasks", state.tasks);
-    await axios.post("http://127.0.0.1:8000/api/columns", state.columns);
-    await axios.post("http://127.0.0.1:8000/api/board", {
+    await axios.post("/api/tasks", state.tasks);
+    await axios.post("/api/columns", state.columns);
+    await axios.post("/api/board", {
       columnOrder: state.columnOrder,
     });
   }
 
   async function getBoardData() {
-    const tasksRes = await axios.get("http://127.0.0.1:8000/api/tasks");
-    const columnsRes = await axios.get("http://127.0.0.1:8000/api/columns");
-    const boardsRes = await axios.get("http://127.0.0.1:8000/api/board");
+    const tasksRes = await axios.get("/api/tasks");
+    const columnsRes = await axios.get("/api/columns");
+    const boardsRes = await axios.get("/api/board");
     const tasks = {};
     const columns = {};
     tasksRes.data.map((el) => (tasks[el.id] = el));
