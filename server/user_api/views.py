@@ -2,6 +2,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import RegistrationSerializer
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.hashers import make_password
+
+# Create your views here.
 @api_view(['POST'])
 def registration_view(request):
     if request.method == 'POST':
@@ -17,12 +20,12 @@ def registration_view(request):
         else:
             data = serializer.errors
         return Response(data)
-
+            
 @api_view(['POST'])
 def logout_view(request):
     if request.method == 'POST':
         request.user.auth_token.delete()
         data = {
-            'message': 'logout'
+          'message' : 'logout' 
         }
         return Response(data)

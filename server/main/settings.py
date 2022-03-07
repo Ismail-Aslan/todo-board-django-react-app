@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     
     # third party apps
     'rest_framework',
+    'rest_framework.authtoken',
     'psycopg2',
     'corsheaders',
     
@@ -150,3 +151,8 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_EXPOSE_HEADERS = (
     'Access-Control-Allow-Origin: *',
 )
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
