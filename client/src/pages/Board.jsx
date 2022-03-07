@@ -4,9 +4,11 @@ import { Container } from "react-bootstrap";
 import Column from "../components/Column";
 import AddColumn from "../components/AddColumn";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-
+import { useNavigate} from "react-router-dom";
 import BoardHeader from "../components/BoardHeader";
-export default function Board(props) {
+
+export default function Board({ token }) {
+  const navigate=useNavigate()
   const initialData = {
     tasks: {
       "task-1": {
@@ -30,32 +32,54 @@ export default function Board(props) {
   useEffect(async () => {
     const data = await getBoardData();
     setState(data);
-    // }, [props.token]);
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     if (state !== initialData) {
       saveBoard();
     }
   }, [state]);
+
   async function saveBoard() {
-    await axios.post("/api/tasks", state.tasks);
-    await axios.post("/api/columns", state.columns);
-    await axios.post("/api/board", {
-      columnOrder: state.columnOrder,
+    await axios.post("/api/tasks", state.tasks, {
+      headers: { Authorization: "Token " + token },
     });
+    await axios.post("/api/columns", state.columns, {
+      headers: { Authorization: "Token " + token },
+    });
+    await axios.post(
+      "/api/board",
+      {
+        columnOrder: state.columnOrder,
+      },
+      { headers: { Authorization: "Token " + token } }
+    );
   }
 
   async function getBoardData() {
-    const tasksRes = await axios.get("/api/tasks");
-    const columnsRes = await axios.get("/api/columns");
-    const boardsRes = await axios.get("/api/board");
-    const tasks = {};
-    const columns = {};
-    tasksRes.data.map((el) => (tasks[el.id] = el));
-    columnsRes.data.map((el) => (columns[el.id] = el));
-    const data = { tasks, columns, columnOrder: boardsRes.data[0].columnOrder };
-    return data;
+    const headers = {
+      headers: { Authorization: "Token " + token },
+    }
+    try {
+      const tasksRes = await axios.get("/api/tasks", headers);
+      const columnsRes = await axios.get("/api/columns", headers);
+      const boardsRes = await axios.get("/api/board", headers);
+      const tasks = {};
+      const columns = {};
+      tasksRes.data.map((el) => (tasks[el.id] = el));
+      columnsRes.data.map((el) => (columns[el.id] = el));
+      const data = {
+        tasks,
+        columns,
+        columnOrder: boardsRes.data[0].columnOrder,
+      };
+      console.log(data);
+      return data;
+    } catch (error) {
+      if(error.response.status === 401 || error.response.status === 403){
+        navigate("/login");
+      }
+    }
   }
 
   function onDragEnd(result) {

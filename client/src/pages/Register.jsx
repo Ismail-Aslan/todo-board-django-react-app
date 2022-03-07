@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-export default function Register() {
+export default function Register({ setToken }) {
   const [showPass, setShowPass] = useState(false);
 
   const email = useRef();
@@ -22,6 +22,7 @@ export default function Register() {
       .then((res) => {
         console.log(res.data);
         localStorage.setItem("Token", JSON.stringify(res.data.token));
+        setToken(res.data.token);
         navigate("/");
       });
   };

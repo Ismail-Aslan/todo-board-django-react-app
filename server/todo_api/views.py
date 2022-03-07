@@ -93,7 +93,7 @@ def board(request):
     else:
         queryset = Board.objects.all()
         if queryset :
-            queryset = Board.objects.get(id="1")
+            queryset = Board.objects.get()
             serializer = BoardSerializer(instance = queryset, data = request.data)
         else:
             serializer = BoardSerializer(data=request.data)

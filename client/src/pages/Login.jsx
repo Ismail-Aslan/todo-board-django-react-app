@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-export default function Login() {
+export default function Login({ setToken }) {
   const navigate = useNavigate();
   const username = useRef();
   const password = useRef();
@@ -17,7 +17,9 @@ export default function Login() {
         password: password.current.value,
       })
       .then((res) => {
+        setToken(res.data.token);
         localStorage.setItem("Token", JSON.stringify(res.data.token));
+        console.log(res.data.token);
         navigate("/");
       });
   };
