@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     
     # my apps
     'todo_api',
+    'user_api',
 ]
 
 MIDDLEWARE = [
