@@ -9,92 +9,98 @@ from rest_framework import status
 
 
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def tasks(request):
-    queryset = Task.objects.all()
-    serializer = TaskSerializer(queryset,many=True)
-    return Response(serializer.data)
+    if request.method == "GET":
+        queryset = Task.objects.all()
+        serializer = TaskSerializer(queryset,many=True)
+        return Response(serializer.data)
+    else:
+        all_rows = Task.objects.all()
+        serializer=TaskSerializer(all_rows,many=True)
+        data = serializer.data.copy()
+        existing = []
+        for x in data:
+            existing.append(x.pop("id"))
+           
+        for key in existing:
+            if key in [*request.data.keys()]:
+                # update
+                queryset = Task.objects.get(id=key)
+                serializer = TaskSerializer(instance = queryset, data = request.data[key])
+                if serializer.is_valid():
+                    serializer.save()
+            else:
+                # delete
+                queryset = Task.objects.get(id=key)
+                queryset.delete()
+            if serializer.errors:
+                print(serializer.errors)
+                
+        for key in [*request.data.keys()]:
+            if not (key in existing):
+                serializer = TaskSerializer(data=request.data[key])
+                if serializer.is_valid():
+                    print(2)
+                    serializer.save()
+                if serializer.errors:
+                    print(serializer.errors)
+        return Response("ok")
+    
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def columns(request):
+    if request.method == "GET":
+        queryset2 = Column.objects.all()
+        serializer2 = ColumnSerializer(queryset2,many=True)
+        return Response(serializer2.data)
+    else:
+        all_rows = Column.objects.all()
+        serializer=ColumnSerializer(all_rows,many=True)
+        data = serializer.data.copy()
+        existing = []
+        for x in data:
+            existing.append(x.pop("id"))  
+        for key in existing:
+            if key in [*request.data.keys()]:
+                # update
+                queryset = Column.objects.get(id=key)
+                serializer = ColumnSerializer(instance = queryset, data = request.data[key])
+                if serializer.is_valid():
+                    serializer.save()
+            else:
+                # delete
+                queryset = Column.objects.get(id=key)
+                queryset.delete()
+            if serializer.errors:
+                print(serializer.errors)
+                
+        for key in [*request.data.keys()]:
+            if not (key in existing):
+                serializer = ColumnSerializer(data=request.data[key])
+                if serializer.is_valid():
+                    serializer.save()
+                if serializer.errors:
+                    print(serializer.errors)
+        return Response("ok")
     
-    queryset2 = Column.objects.all()
-    serializer2 = ColumnSerializer(queryset2,many=True)
-    return Response(serializer2.data)
-
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def board(request):
-    
-    queryset3 = Board.objects.all()
-    serializer3 = BoardSerializer(queryset3,many=True)
-    
-    return Response(serializer3.data)
+    if request.method == "GET":
+        queryset3 = Board.objects.all()
+        serializer3 = BoardSerializer(queryset3,many=True)
+        return Response(serializer3.data)
+    else:
+        queryset = Board.objects.all()
+        if queryset :
+            queryset = Board.objects.get(id="1")
+            serializer = BoardSerializer(instance = queryset, data = request.data)
+        else:
+            serializer = BoardSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
 
-# @api_view(['POST'])
-# def postBoard(request):
-#     serializer = TodoSerializer(data=request.data)
-    
-#     if serializer.is_valid():
-#         serializer.save()
-#     return Response(serializer.data)
+        if serializer.errors:
+            print(serializer.errors)
+        return Response("ok")
 
-# @api_view(['GET','POST'])
-# def todoListAll(request):
-#     if request.method == "POST":
-#         serializer = TodoSerializer(data=request.data)
-        
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)    
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-#     elif request.method == "GET":
-#         queryset = Todo.objects.all()
-#         serializer = TodoSerializer(queryset,many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-# @api_view(['GET','PUT'])
-# def todoListUpdate(request,pk):
-#     if request.method == "PUT":
-#         queryset = Todo.objects.get(id=pk)
-#         serializer = TodoSerializer(instance = queryset, data = request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data,status=status.HTTP_202_ACCEPTED)
-#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)  
-      
-        
-#     elif request.method == "GET":
-#         queryset = Todo.objects.get(id=pk)
-#         serializer = TodoSerializer(queryset)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-      
-# @api_view(['DELETE'])
-# def todoListDelete(request,pk):
-#     if request.method == "DELETE":
-#         queryset = Todo.objects.get(id=pk)
-#         queryset.delete()
-#         return Response("Item deleted",status=status.HTTP_200_OK)  
-    
-    
-# @api_view(['GET','PUT','DELETE'])
-# def todoListDetail(request,pk):
-#     if request.method == "PUT":
-#         queryset = Todo.objects.get(id=pk)
-#         serializer = TodoSerializer(instance = queryset, data = request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data,status=status.HTTP_202_ACCEPTED)
-#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)  
-      
-        
-#     elif request.method == "GET":
-#         queryset = Todo.objects.get(id=pk)
-#         serializer = TodoSerializer(queryset)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-#     elif request.method == "DELETE":
-#         queryset = Todo.objects.get(id=pk)
-#         queryset.delete()
-#         return Response("Item deleted",status=status.HTTP_200_OK)  
-    
