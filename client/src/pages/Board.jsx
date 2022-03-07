@@ -4,29 +4,19 @@ import { Container } from "react-bootstrap";
 import Column from "../components/Column";
 import AddColumn from "../components/AddColumn";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BoardHeader from "../components/BoardHeader";
 
 export default function Board({ token }) {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const initialData = {
     tasks: {
-      "task-1": {
-        id: "task-1",
-        content: "deneme",
-        assignedTo: "ali veli",
-        tags: ["asd", "asdf"],
-        color: "secondary",
-      },
+      
     },
     columns: {
-      "column-1": {
-        id: "column-1",
-        title: "Backlog",
-        taskIds: ["task-1"],
-      },
+     
     },
-    columnOrder: ["column-1"],
+    columnOrder: [],
   };
   const [state, setState] = useState(initialData);
   useEffect(async () => {
@@ -39,27 +29,22 @@ export default function Board({ token }) {
       saveBoard();
     }
   }, [state]);
-
+  const headers = {
+    headers: { Authorization: "Token " + token },
+  };
   async function saveBoard() {
-    await axios.post("/api/tasks", state.tasks, {
-      headers: { Authorization: "Token " + token },
-    });
-    await axios.post("/api/columns", state.columns, {
-      headers: { Authorization: "Token " + token },
-    });
+    await axios.post("/api/tasks", state.tasks, headers);
+    await axios.post("/api/columns", state.columns, headers);
     await axios.post(
       "/api/board",
       {
         columnOrder: state.columnOrder,
       },
-      { headers: { Authorization: "Token " + token } }
+      headers
     );
   }
 
   async function getBoardData() {
-    const headers = {
-      headers: { Authorization: "Token " + token },
-    }
     try {
       const tasksRes = await axios.get("/api/tasks", headers);
       const columnsRes = await axios.get("/api/columns", headers);
@@ -76,7 +61,7 @@ export default function Board({ token }) {
       console.log(data);
       return data;
     } catch (error) {
-      if(error.response.status === 401 || error.response.status === 403){
+      if (error.response.status === 401 || error.response.status === 403) {
         navigate("/login");
       }
     }
@@ -160,7 +145,7 @@ export default function Board({ token }) {
       style={{ height: "min-content" }}
       fluid
     >
-      <BoardHeader />
+      <BoardHeader headers={headers} />
 
       <DragDropContext onDragEnd={onDragEnd}>
         <AddColumn state={state} setState={setState} />
